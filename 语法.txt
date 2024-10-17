@@ -1,0 +1,14 @@
+fofa
+title="综合安防管理平台"
+app="HIKVISION-综合安防管理平台" ||app="HIKVISION-iSecure-Center"
+icon_hash="-1830859634"   ip对讲系统
+title=”流媒体管理服务器”
+icon_hash="-911494769"    ivm
+海康威视安全接入网关任意文件读取漏洞 body="webui/js/jquerylib/jquery-1.7.2.min.js" && product="ABT-应用网关" || body="webui/js/jquerylib/jquery-1.7.2.min.js" && product="HIKVISION-安全网关"
+
+
+
+
+hunter
+web.body="vendors/custom/html5.min.js"  ip系统
+web.body="/views/home/file/installPackage.rar"`||`web.body="/home/locationIndex.action" ivm8700

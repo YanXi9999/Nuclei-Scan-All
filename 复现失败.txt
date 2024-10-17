@@ -1,0 +1,2 @@
+海康威视综合安防管理平台 AutoLoginTicket 远程代码执行
+海康威视iVMS-8700综合安防管理平台 getPic任意文件上传

